@@ -3,9 +3,6 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
-// MongoDB connection from global
-const mongoDb = global.mongoDb;
-
 // Schema for storing calculation history
 const CalculationSchema = new mongoose.Schema({
   operation: { type: String, required: true },
@@ -15,7 +12,8 @@ const CalculationSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 
-const Calculation = mongoDb.model('Calculation', CalculationSchema);
+// Define the model directly using mongoose
+const Calculation = mongoose.model('Calculation', CalculationSchema);
 
 // GET /api/hello
 router.get('/hello', (req, res) => {
