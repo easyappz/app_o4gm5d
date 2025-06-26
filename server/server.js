@@ -1,16 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const bodyParser = require('body-parser');
 const apiRoutes = require('./apiRoutes');
 
-// Для работы с express
+// Initialize express app
 const app = express();
 
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+
+// Mount API routes
 app.use('/api', apiRoutes);
 
-/**
- * Пример создания и записи данных в базу данных
- */
+// MongoDB connection
 const MONGO_URI = process.env.MONGO_URI;
 
 const mongoDb = mongoose.createConnection(MONGO_URI);
@@ -24,14 +26,13 @@ mongoDb
     console.error('MongoDB connection error:', err);
   });
 
-// const MongoTestSchema = new mongoose.Schema({
-//   value: { type: String, required: true },
-// });
+// Make mongoDb accessible globally
+global.mongoDb = mongoDb;
 
-// const MongoModelTest = global.mongoDb.model('Test', MongoTestSchema);
+// Define the port
+const PORT = process.env.PORT || 3000;
 
-// const newTest = new MongoModelTest({
-//   value: 'test-value',
-// });
-
-// newTest.save();
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
